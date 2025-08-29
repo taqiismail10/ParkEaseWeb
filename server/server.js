@@ -29,8 +29,8 @@ app.get("/", (req, res) => {
   return res.json({ message: "Hello, it's working..." });
 });
 
-// import apiRoutes from "./routes/api.js";
-// app.use("/api", apiRoutes); // Main API routes
+import apiRoutes from "./routes/api.js";
+app.use("/api", apiRoutes); // Main API routes
 
 // import adminRoute from "./routes/adminRoute.js";
 // app.use("/api/admin", adminRoute); // For system admin
