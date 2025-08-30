@@ -11,7 +11,7 @@ export default function WaitlistModal({ isOpen, closeModal }) {
   });
 
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState([]); // always store strings here
   const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
@@ -30,6 +30,37 @@ export default function WaitlistModal({ isOpen, closeModal }) {
     setLoading(false);
   };
 
+  const normalizeErrors = (errPayload) => {
+    // errPayload can be an array of strings or objects or a single string.
+    if (!errPayload) return [];
+    if (Array.isArray(errPayload)) {
+      return errPayload.map((e) => {
+        if (typeof e === "string") return e;
+        // common object shape: { message, rule, field }
+        if (e && typeof e === "object") {
+          if (e.message) return e.message;
+          try {
+            return JSON.stringify(e);
+          } catch {
+            return String(e);
+          }
+        }
+        return String(e);
+      });
+    }
+    // single string or object
+    if (typeof errPayload === "string") return [errPayload];
+    if (typeof errPayload === "object") {
+      if (errPayload.message) return [errPayload.message];
+      try {
+        return [JSON.stringify(errPayload)];
+      } catch {
+        return [String(errPayload)];
+      }
+    }
+    return [String(errPayload)];
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -45,8 +76,21 @@ export default function WaitlistModal({ isOpen, closeModal }) {
         closeModal();
       }, 2000);
     } catch (error) {
+      // Normalize ApiError payloads (might contain array of objects)
       if (error instanceof ApiError) {
-        setErrors(error.errors.length > 0 ? error.errors : [error.message]);
+        // error.errors might be an array of objects: map to messages
+        const normalized = normalizeErrors(
+          error.errors && error.errors.length > 0 ? error.errors : error.message
+        );
+        setErrors(normalized);
+      } else if (
+        error &&
+        error.response &&
+        error.response.data &&
+        error.response.data.errors
+      ) {
+        // defensive: handle typical axios response shape
+        setErrors(normalizeErrors(error.response.data.errors));
       } else {
         setErrors(["Something went wrong. Please try again."]);
       }
@@ -59,6 +103,8 @@ export default function WaitlistModal({ isOpen, closeModal }) {
     resetForm();
     closeModal();
   };
+
+  if (!isOpen && !success) return null;
 
   if (success) {
     return (
@@ -97,6 +143,7 @@ export default function WaitlistModal({ isOpen, closeModal }) {
     );
   }
 
+  // Main modal UI
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity ${
@@ -122,8 +169,10 @@ export default function WaitlistModal({ isOpen, closeModal }) {
         {errors.length > 0 && (
           <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
             <ul className="text-sm text-red-600 space-y-1">
-              {errors.map((error, index) => (
-                <li key={index}>• {error}</li>
+              {errors.map((err, index) => (
+                <li key={index}>
+                  • {typeof err === "string" ? err : String(err)}
+                </li>
               ))}
             </ul>
           </div>
@@ -148,6 +197,7 @@ export default function WaitlistModal({ isOpen, closeModal }) {
               required
             />
           </div>
+
           <div>
             <label
               htmlFor="email"
@@ -166,6 +216,7 @@ export default function WaitlistModal({ isOpen, closeModal }) {
               required
             />
           </div>
+
           <div>
             <label
               htmlFor="phone"
@@ -185,6 +236,7 @@ export default function WaitlistModal({ isOpen, closeModal }) {
               required
             />
           </div>
+
           <div className="mt-6 flex justify-center gap-4">
             <Button
               type="submit"
