@@ -1,7 +1,7 @@
 // client/src/components/WaitlistModal.js
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { api, ApiError } from "@/lib/api";
+import { useState } from "react";
 
 export default function WaitlistModal({ isOpen, closeModal }) {
   const [formData, setFormData] = useState({
@@ -68,6 +68,7 @@ export default function WaitlistModal({ isOpen, closeModal }) {
 
     try {
       await api.waitlist.create(formData);
+      await api.waitlist.sendEmail({ email: formData.email });
       setSuccess(true);
 
       // Show success message for 2 seconds then close modal
