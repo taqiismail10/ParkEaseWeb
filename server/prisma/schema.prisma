@@ -16,7 +16,7 @@ datasource db {
 model Waitlist {
   id        Int      @id @default(autoincrement())
   name      String
-  email     String   @unique
+  email     String  
   phone     String
   createdAt DateTime @default(now())
 }
@@ -24,7 +24,7 @@ model Waitlist {
 model Investor {
   id          Int      @id @default(autoincrement())
   name        String
-  email       String   @unique
+  email       String  
   description String
   createdAt   DateTime @default(now())
 }

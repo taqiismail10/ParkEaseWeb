@@ -1,5 +1,5 @@
 //controllers/investorController.js
-
+import vine from "@vinejs/vine";
 import prisma from "../DB/db.config.js";
 import { investorValidator } from "../validations/validator.js";
 

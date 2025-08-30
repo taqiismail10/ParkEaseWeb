@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // local dev
+      "http://localhost:3000", // local dev
       "https://uniform-49v3.vercel.app", // production frontend
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
