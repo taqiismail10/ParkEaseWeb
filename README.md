@@ -28,25 +28,68 @@ A modern, responsive landing site for **ParkEase** built with the **PERN stack (
 ---
 
 ## 📂 Project Structure
+```
+ParkEaseWeb/
+├── client/                     # Next.js frontend (React)
+│   ├── public/                 # Static assets (icons, images, etc.)
+│   ├── src/                    # App source code
+│   ├── components.json         # UI components config
+│   ├── eslint.config.mjs       # ESLint rules
+│   ├── jsconfig.json           # Path aliases for Next.js
+│   ├── next.config.mjs         # Next.js config
+│   ├── package.json            # Frontend dependencies & scripts
+│   └── ...                     # Other Next.js project files
+│
+├── server/                     # Express backend + Prisma ORM
+│   ├── config/                 # Config files (e.g., middleware, settings)
+│   ├── controllers/            # Request handlers / business logic
+│   ├── routes/                 # API route definitions
+│   ├── validations/            # Input validation logic
+│   ├── DB/                     # Database-related utilities/helpers
+│   ├── prisma/                 # Prisma schema & migrations
+│   │   ├── schema.prisma
+│   │   └── migrations/
+│   ├── server.js               # Express server entrypoint
+│   ├── package.json            # Backend dependencies & scripts
+│   └── .env                    # Environment variables (ignored by git)
+│
+├── package-lock.json           # Global lock file (monorepo-level if used)
+├── README.md                   # Project documentation (you’re editing this)
+└── ...                         # Other root configs if added
+```
+---
 
-```
-parkease/
-│── prisma/
-│   ├── schema.prisma      # Prisma schema definition
-│   └── migrations/        # Auto-generated migrations
-│── src/
-│   ├── pages/             # Next.js pages
-│   ├── components/        # Reusable UI components
-│   ├── lib/               # Prisma client, utils
-│   └── api/               # API routes (waitlist, contact, etc.)
-│── public/                # Static assets (logos, images)
-│── .env                   # Environment variables
-│── README.md              # Project docs
-│── package.json
-```
+
+## 📜 Scripts Overview
+
+### 🔹 Backend (run from `/server`)
+
+| Command                                                | Description                                                       |
+| ------------------------------------------------------ | ----------------------------------------------------------------- |
+| `npm i`                                                | Install backend dependencies                                      |
+| `npm run server`                                       | Start Express backend server (default: `http://localhost:5000`)   |
+| `npx prisma migrate dev --schema=prisma/schema.prisma` | Apply DB migrations (creates/updates schema)                      |
+| `npx prisma generate --schema=prisma/schema.prisma`    | Generate Prisma Client (required after migrations or fresh clone) |
+| `npx prisma studio`                                    | Open Prisma Studio (GUI for inspecting your DB)                   |
+
+### 🔹 Frontend (run from `/client`)
+
+| Command         | Description                                                 |
+| --------------- | ----------------------------------------------------------- |
+| `npm i`         | Install frontend dependencies                               |
+| `npm run dev`   | Start Next.js dev server (default: `http://localhost:3000`) |
+| `npm run build` | Build production bundle                                     |
+| `npm run start` | Run production server after build                           |
 
 ---
 
+✨ **Pro tip:** Always start backend **before** frontend, so API requests don’t fail.
+
+---
+
+Do you want me to also add a **“Typical Development Flow”** section (step 1 DB, step 2 backend, step 3 frontend) as a quick-glance workflow for contributors?
+
+---
 ## 🗄 Database Schema
 
 Key models defined in `schema.prisma`:
@@ -62,47 +105,157 @@ Key models defined in `schema.prisma`:
 * `SiteSetting` – Configurable site-wide settings.
 
 ---
-
-## ⚡ Quick Start
-
-### 1. Clone the Repository
+## Clone the Repository
 
 ```bash
 git clone https://github.com/your-org/parkease.git
 cd parkease
 ```
 
-### 2. Install Dependencies
+---
+
+## Install Dependencies & Run the Project (DB → Backend → Frontend)
+
+> Recommended order: **Database** → **Backend** → **Frontend**
+> Monorepo layout:
+>
+> ```
+> ParkEaseWeb/
+> ├─ client/     # Next.js frontend
+> └─ server/     # Node/Express + Prisma backend
+> ```
+
+## 0) Prerequisites
+
+* **Node.js** 18+ and **npm**
+* **PostgreSQL** 16+ (local) or a cloud Postgres (Neon/Supabase/etc.)
+
+> macOS (Homebrew):
+>
+> ```bash
+> brew install node
+> brew install postgresql@16
+> brew services start postgresql@16
+> echo 'export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"' >> ~/.zshrc && exec zsh
+> ```
+
+---
+
+## 1) Database Setup (PostgreSQL)
+
+### Option A — Local Postgres (recommended for dev)
+
+Create a DB user and database:
 
 ```bash
-npm install
+# open psql
+psql -d postgres
+
+-- inside psql:
+CREATE ROLE parkease WITH LOGIN PASSWORD 'change_me_strong';
+ALTER ROLE parkease CREATEDB;
+\q
+
+# back in shell, create database:
+createdb -U parkease -h localhost -p 5432 parkease
 ```
 
-### 3. Setup Environment
-
-Create a `.env` file:
+**Server `.env`**
+Create `ParkEaseWeb/server/.env` with your connection string:
 
 ```env
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
+DATABASE_URL="postgresql://parkease:change_me_strong@localhost:5432/parkease?schema=public"
 ```
 
-### 4. Run Database Migration
+> If your password contains special characters, URL-encode them (e.g., `@` → `%40`, `%` → `%25`).
 
-```bash
-npx prisma migrate dev --name init_landing
+### Option B — Cloud Postgres (Neon/Supabase/etc.)
+
+Paste the provider’s URL into `server/.env`:
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DBNAME?sslmode=require"
 ```
 
-### 5. Generate Prisma Client
+---
+
+## 2) Backend Setup (Express + Prisma)
+
+From the repo root:
 
 ```bash
-npx prisma generate
+cd server
+npm i
 ```
 
-### 6. Start Dev Server
+Run database migrations and generate the Prisma client:
 
 ```bash
+# Apply migrations (creates/updates DB schema)
+npx prisma migrate dev --schema=prisma/schema.prisma
+
+# Ensure Prisma Client is generated (needed for code to compile)
+npx prisma generate --schema=prisma/schema.prisma
+```
+
+Start the backend:
+
+```bash
+npm run server
+```
+
+---
+
+## 4) Quick Start (TL;DR)
+
+```bash
+# Backend
+cd server
+npm i
+npx prisma migrate dev --schema=prisma/schema.prisma
+npx prisma generate --schema=prisma/schema.prisma
+npm run server
+
+# Frontend (new terminal)
+cd client
+npm i
 npm run dev
 ```
+
+---
+
+## 5) Common Tasks
+
+* Re-run Prisma after schema changes:
+
+  ```bash
+  cd server
+  npx prisma migrate dev --schema=prisma/schema.prisma
+  ```
+* Regenerate Prisma client:
+
+  ```bash
+  npx prisma generate --schema=prisma/schema.prisma
+  ```
+* Connect to DB quickly:
+
+  ```bash
+  psql "postgresql://parkease:change_me_strong@localhost:5432/parkease"
+  ```
+
+---
+
+## 6) Troubleshooting
+
+* **Prisma can’t find schema**: run commands from `server/` or pass `--schema=prisma/schema.prisma`.
+* **`P1012` missing `DATABASE_URL`**: ensure `server/.env` exists and matches your DB.
+* **`P1013` invalid URL/port**: replace placeholders with real values; ensure port is numeric (e.g., `5432`).
+* **Password with special chars**: URL-encode in `DATABASE_URL`.
+* **macOS service down**: `brew services start postgresql@16` (or `restart`).
+
+---
+
+
 
 App should be running at [http://localhost:3000](http://localhost:3000)
 

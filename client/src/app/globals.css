@@ -76,6 +76,11 @@
   --sidebar-ring: oklch(0.707 0.022 261.325);
   --background: oklch(1 0 0);
   --foreground: oklch(0.13 0.028 261.692);
+  --pe-blue: #2563EB;
+  --pe-teal: #14B8A6;
+  --pe-yellow: #FFC800;
+  --pe-navy: #0F172A;
+  --pe-gray: #F6F7FB;
 }
 
 .dark {
@@ -119,4 +124,25 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.pe-soft-shadow {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.pe-gradient {
+  background: linear-gradient(135deg, var(--pe-blue), var(--pe-teal));
+}
+
+.pe-hover-underline::after {
+  content: "";
+  display: block;
+  height: 2px;
+  background: var(--pe-blue);
+  transition: width 0.2s;
+  width: 0;
+}
+
+.pe-hover-underline:hover::after {
+  width: 100%;
 }
