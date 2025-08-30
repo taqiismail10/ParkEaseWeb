@@ -67,8 +67,8 @@ export default function WaitlistModal({ isOpen, closeModal }) {
     setErrors([]);
 
     try {
-      await api.waitlist.create(formData);
-      await api.waitlist.sendEmail({ email: formData.email });
+      const response = await api.waitlist.create(formData);
+      console.log("API Response:", response); // Debugging
       setSuccess(true);
 
       // Show success message for 2 seconds then close modal
@@ -77,21 +77,12 @@ export default function WaitlistModal({ isOpen, closeModal }) {
         closeModal();
       }, 2000);
     } catch (error) {
-      // Normalize ApiError payloads (might contain array of objects)
+      console.error("API Error:", error); // Debugging
       if (error instanceof ApiError) {
-        // error.errors might be an array of objects: map to messages
         const normalized = normalizeErrors(
           error.errors && error.errors.length > 0 ? error.errors : error.message
         );
         setErrors(normalized);
-      } else if (
-        error &&
-        error.response &&
-        error.response.data &&
-        error.response.data.errors
-      ) {
-        // defensive: handle typical axios response shape
-        setErrors(normalizeErrors(error.response.data.errors));
       } else {
         setErrors(["Something went wrong. Please try again."]);
       }
