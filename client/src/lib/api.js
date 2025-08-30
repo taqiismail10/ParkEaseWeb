@@ -54,6 +54,11 @@ export const api = {
         method: "POST",
         body: JSON.stringify(data),
       }),
+    sendEmail: (email) =>
+      apiCall("/send-email", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      }),
   },
 
   // Investor endpoints

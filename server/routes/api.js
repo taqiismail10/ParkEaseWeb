@@ -13,6 +13,6 @@ router.post("/waitlist", waitlistController.createWaitlistEntry);
 // Investor routes
 router.get("/investors", investorController.getAllInvestors);
 router.post("/investors", investorController.createInvestor);
-router.get("/send-email", waitlistController.sendEmailToWaitlist);
+router.post("/send-email", waitlistController.sendEmailToWaitlist);
 
 export default router;

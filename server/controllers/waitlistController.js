@@ -46,7 +46,7 @@ class waitlistController {
 
   static async sendEmailToWaitlist(req, res) {
     try {
-      const { email } = req.query;
+      const { email } = req.body;
       const payload = {
         toEmail: email,
         subject: "🎉 Welcome to the ParkEase Waitlist!",
@@ -63,6 +63,7 @@ class waitlistController {
       };
 
       await sendEmail(payload.toEmail, payload.subject, payload.body);
+      res.status(200).json({ message: "Email sent successfully" });
     } catch (error) {
       console.error("Error sending email to waitlist:", error);
       res.status(500).json({ error: "Failed to send email to waitlist" });
