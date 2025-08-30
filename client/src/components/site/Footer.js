@@ -3,24 +3,24 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-background text-muted-foreground py-8 mt-16">
+    <footer className="bg-background text-muted-foreground py-8 mt-16 border-t border-t-[var(--pe-gray)]/40">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
             <h4 className="font-semibold">ParkEase</h4>
             <ul className="space-y-2 mt-4 text-sm">
               <li>
-                <Link href="/about" className="hover:text-primary">
+                <Link href="/about" className="hover:pe-hover-underline">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="hover:text-primary">
+                <Link href="/pricing" className="hover:pe-hover-underline">
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-primary">
+                <Link href="/contact" className="hover:pe-hover-underline">
                   Contact
                 </Link>
               </li>
@@ -30,12 +30,12 @@ export default function Footer() {
             <h4 className="font-semibold">Services</h4>
             <ul className="space-y-2 mt-4 text-sm">
               <li>
-                <Link href="/features" className="hover:text-primary">
+                <Link href="/features" className="hover:pe-hover-underline">
                   Features
                 </Link>
               </li>
               <li>
-                <Link href="/support" className="hover:text-primary">
+                <Link href="/support" className="hover:pe-hover-underline">
                   Support
                 </Link>
               </li>
