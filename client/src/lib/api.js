@@ -1,4 +1,4 @@
-// client/src/lib/api.js
+// client/src/lib/api.js - FIXED VERSION
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
@@ -44,7 +44,7 @@ const apiCall = async (endpoint, options = {}) => {
   }
 };
 
-// API functions
+// API functions - FIXED STRUCTURE
 export const api = {
   // Waitlist endpoints
   waitlist: {
@@ -58,14 +58,15 @@ export const api = {
       apiCall(`/send-email?email=${encodeURIComponent(email)}`, {
         method: "GET",
       }),
-    // Support endpoints
-    support: {
-      create: (data) =>
-        apiCall("/support", {
-          method: "POST",
-          body: JSON.stringify(data),
-        }),
-    },
+  },
+
+  // Support endpoints - MOVED OUT OF WAITLIST
+  support: {
+    create: (data) =>
+      apiCall("/support", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
   },
 
   // Investor endpoints

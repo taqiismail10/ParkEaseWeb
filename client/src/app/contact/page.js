@@ -1,10 +1,10 @@
-// app/contact/page.js
-"use client"; // Add this directive at the top of the file
+// app/contact/page.js - FIXED VERSION
+"use client";
 
-import { useState } from "react"; // Import useState
+import { useState } from "react";
 
 export default function Contact() {
-  const [message, setMessage] = useState(""); // Using useState to handle message
+  const [message, setMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,7 +14,9 @@ export default function Contact() {
   return (
     <main className="max-w-7xl mx-auto px-6 py-16">
       <h1 className="text-3xl font-semibold">Contact Us</h1>
-      <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+
+      {/* REMOVED FORM TAG - Using div instead */}
+      <div className="mt-8 space-y-4">
         <div>
           <label htmlFor="message" className="block text-sm">
             Your Message
@@ -28,12 +30,12 @@ export default function Contact() {
           />
         </div>
         <button
-          type="submit"
+          onClick={handleSubmit} // CHANGED FROM type="submit" to onClick
           className="px-6 py-2 bg-primary text-white rounded-lg"
         >
           Send Message
         </button>
-      </form>
+      </div>
     </main>
   );
 }
