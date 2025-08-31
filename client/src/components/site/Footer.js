@@ -19,11 +19,11 @@ export default function Footer() {
                   Pricing
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/contact" className="hover:pe-hover-underline">
                   Contact
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
           <div>
