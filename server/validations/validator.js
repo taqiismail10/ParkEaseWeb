@@ -17,3 +17,10 @@ export const investorValidator = vine.object({
   email: vine.string().trim().email(),
   description: vine.string().maxLength(500).optional().nullable(),
 });
+
+export const supportValidator = vine.object({
+  name: vine.string().minLength(2).maxLength(100),
+  email: vine.string().email(),
+  subject: vine.string().minLength(3).maxLength(200),
+  message: vine.string().minLength(10).maxLength(1000),
+});

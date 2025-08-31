@@ -1,9 +1,14 @@
-// components/site/Navbar.js
+"use client";
+
 import { Menu } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
+  const pathname = usePathname();
+
+  const isActive = (path) => pathname === path;
   return (
     <header className="bg-background text-foreground py-6 shadow-md">
       {" "}
@@ -22,32 +27,56 @@ export default function Navbar() {
         <nav className="hidden md:flex items-center space-x-8">
           <Link
             href="/"
-            className="relative text-base px-4 py-2"
+            className={`relative text-base px-4 py-2 transition-colors ${
+              isActive("/")
+                ? "text-primary font-semibold"
+                : "hover:text-primary"
+            }`}
           >
             Home
-            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary transition-transform transform scale-x-0 group-hover:scale-x-100"></span>
+            {isActive("/") && (
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary"></span>
+            )}
           </Link>
           <Link
             href="/pricing"
-            className="relative text-base px-4 py-2"
+            className={`relative text-base px-4 py-2 transition-colors ${
+              isActive("/pricing")
+                ? "text-primary font-semibold"
+                : "hover:text-primary"
+            }`}
           >
             Pricing
-            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary transition-transform transform scale-x-0 group-hover:scale-x-100"></span>
+            {isActive("/pricing") && (
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary"></span>
+            )}
           </Link>
           <Link
             href="/investor"
-            className="relative text-base px-4 py-2"
+            className={`relative text-base px-4 py-2 transition-colors ${
+              isActive("/investor")
+                ? "text-primary font-semibold"
+                : "hover:text-primary"
+            }`}
           >
             Investors
-            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary transition-transform transform scale-x-0 group-hover:scale-x-100"></span>
+            {isActive("/investor") && (
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary"></span>
+            )}
           </Link>
           <Link
             href="/about"
-            className="relative text-base px-4 py-2"
+            className={`relative text-base px-4 py-2 transition-colors ${
+              isActive("/about")
+                ? "text-primary font-semibold"
+                : "hover:text-primary"
+            }`}
           >
             About
-            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary transition-transform transform scale-x-0 group-hover:scale-x-100"></span>
-          </Link>
+            {isActive("/about") && (
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary"></span>
+            )}
+          </Link>{" "}
         </nav>
       </div>
       <div className="flex items-center space-x-4">

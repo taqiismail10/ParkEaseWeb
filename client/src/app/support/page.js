@@ -1,21 +1,25 @@
 // app/support/page.js
 "use client";
-
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  Book,
   ChevronDown,
   ChevronUp,
-  MessageCircle,
-  Mail,
-  Phone,
   Clock,
   HelpCircle,
-  Book,
+  Mail,
+  MessageCircle,
+  Phone,
 } from "lucide-react";
+import { useState } from "react";
+import api from "@/lib/api"; // Assuming this is where your API client is located
+import { ApiError } from "@/lib/errors"; // Assuming this is where ApiError is defined
 
 export default function Support() {
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const [success, setSuccess] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
   const [contactForm, setContactForm] = useState({
     name: "",
@@ -28,15 +32,33 @@ export default function Support() {
     setOpenFaq(openFaq === index ? null : index);
   };
 
-  const handleContactSubmit = (e) => {
-    e.preventDefault();
-    alert("Support request submitted! We'll get back to you within 24 hours.");
-    setContactForm({ name: "", email: "", subject: "", message: "" });
-  };
-
   const handleContactChange = (e) => {
     const { name, value } = e.target;
     setContactForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrors([]);
+
+    try {
+      await api.support.create(contactForm);
+      setSuccess(true);
+      setContactForm({ name: "", email: "", subject: "", message: "" });
+
+      setTimeout(() => {
+        setSuccess(false);
+      }, 3000);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setErrors(error.errors.length > 0 ? error.errors : [error.message]);
+      } else {
+        setErrors(["Something went wrong. Please try again."]);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const faqs = [
@@ -237,6 +259,25 @@ export default function Support() {
                 <CardTitle>Send us a Message</CardTitle>
               </CardHeader>
               <CardContent>
+                {/* Success Message */}
+                {success && (
+                  <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg">
+                    Your message has been sent successfully! We will get back to
+                    you soon.
+                  </div>
+                )}
+
+                {/* Error Messages */}
+                {errors.length > 0 && (
+                  <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+                    <ul className="list-disc pl-5 space-y-1">
+                      {errors.map((error, index) => (
+                        <li key={index}>{error}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 <form onSubmit={handleContactSubmit} className="space-y-4">
                   <div>
                     <label
@@ -317,8 +358,8 @@ export default function Support() {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full">
-                    Send Message
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               </CardContent>

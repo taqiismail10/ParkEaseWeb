@@ -21,6 +21,15 @@ model Waitlist {
   createdAt DateTime @default(now())
 }
 
+model Support {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String  
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
+
 model Investor {
   id          Int      @id @default(autoincrement())
   name        String
