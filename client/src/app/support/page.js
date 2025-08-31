@@ -1,4 +1,4 @@
-// app/support/page.js
+// app/support/page.js - FIXED VERSION
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,8 +13,7 @@ import {
   Phone,
 } from "lucide-react";
 import { useState } from "react";
-import api from "@/lib/api"; // Assuming this is where your API client is located
-import { ApiError } from "@/lib/errors"; // Assuming this is where ApiError is defined
+import { api, ApiError } from "@/lib/api"; // FIXED IMPORT
 
 export default function Support() {
   const [loading, setLoading] = useState(false);
@@ -43,7 +42,7 @@ export default function Support() {
     setErrors([]);
 
     try {
-      await api.support.create(contactForm);
+      await api.support.create(contactForm); // FIXED API CALL
       setSuccess(true);
       setContactForm({ name: "", email: "", subject: "", message: "" });
 
