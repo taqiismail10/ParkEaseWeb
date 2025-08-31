@@ -55,9 +55,8 @@ export const api = {
         body: JSON.stringify(data),
       }),
     sendEmail: (email) =>
-      apiCall("/send-email", {
-        method: "POST",
-        body: JSON.stringify({ email }),
+      apiCall(`/send-email?email=${encodeURIComponent(email)}`, {
+        method: "GET",
       }),
   },
 

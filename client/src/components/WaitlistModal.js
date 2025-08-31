@@ -1,4 +1,5 @@
 // client/src/components/WaitlistModal.js
+
 import { Button } from "@/components/ui/button";
 import { api, ApiError } from "@/lib/api";
 import { useState } from "react";

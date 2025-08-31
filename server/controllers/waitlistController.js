@@ -33,6 +33,11 @@ class waitlistController {
           phone: data.phone,
         },
       });
+      // emailQueue.add({
+      //   to: data.email,
+      //   subject: "🎉 Welcome to the ParkEase!",
+      //   body: welcomeEmailTemplate(data.name),
+      // });
 
       res.status(201).json(newEntry);
     } catch (error) {
@@ -46,10 +51,10 @@ class waitlistController {
 
   static async sendEmailToWaitlist(req, res) {
     try {
-      const { email } = req.body;
+      const { email } = req.query;
       const payload = {
         toEmail: email,
-        subject: "🎉 Welcome to the ParkEase Waitlist!",
+        subject: "🎉 Welcome to the ParkEase!",
         body: `
         <h1 style="color:#2c3e50;">Welcome to ParkEase 🚗</h1>
         <p>Hi there,</p>
