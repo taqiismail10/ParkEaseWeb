@@ -58,6 +58,14 @@ export const api = {
       apiCall(`/send-email?email=${encodeURIComponent(email)}`, {
         method: "GET",
       }),
+    // Support endpoints
+    support: {
+      create: (data) =>
+        apiCall("/support", {
+          method: "POST",
+          body: JSON.stringify(data),
+        }),
+    },
   },
 
   // Investor endpoints
