@@ -1,35 +1,57 @@
 import nodemailer from "nodemailer";
 
+const SMTP_PORT = Number(process.env.SMTP_PORT) || 587;
+const secure = SMTP_PORT === 465; // true for port 465, false for STARTTLS (587)
+
 export const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  secure: false, // Set to true if you use port 465
+  port: SMTP_PORT,
+  secure, // true for 465, false for other ports
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  // Optional - helps in some environments with self-signed certs
   tls: {
-    rejectUnauthorized: false, // Only for testing; remove in production
+    rejectUnauthorized: false,
   },
-  debug: true,
 });
 
+// Optional: verify connection configuration on startup
 transporter.verify((err, success) => {
-  if (err) console.error("SMTP verify failed", err);
-  else console.log("SMTP server is ready to take messages");
+  if (err) {
+    console.error("Mailer verification failed:", err);
+  } else {
+    console.log("Mailer is ready to send messages");
+  }
 });
 
-export const sendEmail = async (toMail, subject, body) => {
-  try {
-    const info = await transporter.sendMail({
-      from: '"ParkEase Team" <parkease.official.4@gmail.com>',
-      to: toMail,
-      subject: subject,
-      html: body,
-    });
+/**
+ * Send an email.
+ * @param {string} toEmail - recipient email
+ * @param {string} subject - email subject
+ * @param {string} html - HTML body
+ * @returns {Promise<object>} nodemailer sendMail info
+ */
+export const sendEmail = async (toEmail, subject, html) => {
+  const from = process.env.FROM_EMAIL || process.env.SMTP_USER;
 
-    console.log("Message sent: %s", info.messageId);
-  } catch (error) {
-    console.error("Error sending email:", error);
+  if (
+    !process.env.SMTP_HOST ||
+    !process.env.SMTP_USER ||
+    !process.env.SMTP_PASS
+  ) {
+    throw new Error(
+      "SMTP configuration is incomplete. Check SMTP_HOST, SMTP_USER and SMTP_PASS."
+    );
   }
+
+  const info = await transporter.sendMail({
+    from,
+    to: toEmail,
+    subject,
+    html,
+  });
+
+  return info;
 };
