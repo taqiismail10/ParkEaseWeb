@@ -11,7 +11,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000", // local dev
-      "https://uniform-49v3.vercel.app", // production frontend
+      "www.parkease.dev", // production frontend
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
   return res.json({ message: "Hello, it's working..." });
 });
 
-import apiRoutes from "./routes/api.js";
+import apiRoutes from "../routes/api.js";
 app.use("/api", apiRoutes); // Main API routes
 
 // import adminRoute from "./routes/adminRoute.js";
