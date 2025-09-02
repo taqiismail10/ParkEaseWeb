@@ -1,11 +1,12 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "api/server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "server": "nodemon server.js"
+    "start": "node api/server.js",
+    "server": "nodemon api/server.js",
+    "build": "npx prisma generate"
   },
   "keywords": [],
   "author": "",
