@@ -71,9 +71,9 @@ export default function About() {
           <div>
             <h3 className="text-xl font-semibold">Our Incubator Journey</h3>
             <p className="mt-4 text-sm text-black/60">
-              Selected from over 500 applications, ParkEase joined Bangladesh's
+              Selected from over 500 applications, ParkEase joined Bangladesh&apos;s
               premier startup incubator program in 2024. Through intensive
-              mentorship and strategic guidance, we've successfully secured
+              mentorship and strategic guidance, we&apos;ve successfully secured
               pre-seed funding and built strategic partnerships with key
               stakeholders in the urban mobility ecosystem.
             </p>
@@ -81,7 +81,7 @@ export default function About() {
               <h4 className="text-lg font-semibold">Pre-Seed Funding Milestone</h4>
               <p className="mt-2 text-sm text-black/60">
                 Successfully raised $150K in pre-seed funding to accelerate
-                product development and market validation across Dhaka's key
+                product development and market validation across Dhaka&apos;s key
                 commercial districts.
               </p>
             </div>
@@ -111,7 +111,7 @@ export default function About() {
             </div>
             <p className="mt-4 text-sm text-black/60">
               A future where every parking space is optimized, every journey is
-              efficient, and Bangladesh's cities become models of smart urban
+              efficient, and Bangladesh&apos;s cities become models of smart urban
               planning and sustainable transportation infrastructure for the
               developing world.
             </p>

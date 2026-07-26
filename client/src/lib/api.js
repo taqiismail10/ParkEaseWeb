@@ -1,6 +1,5 @@
-// client/src/lib/api.js - FIXED VERSION
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+// keep it simple: frontend calls its own /api; Next.js rewrites to backend
+const API_BASE_URL = "/api";
 
 class ApiError extends Error {
   constructor(message, status, errors = []) {
@@ -12,74 +11,46 @@ class ApiError extends Error {
 
 const apiCall = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
-
   const config = {
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
+    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
     ...options,
   };
 
   try {
-    const response = await fetch(url, config);
-    const data = await response.json();
-
-    if (!response.ok) {
+    const res = await fetch(url, config);
+    const data = await res.json();
+    if (!res.ok)
       throw new ApiError(
         data.error || "Something went wrong",
-        response.status,
+        res.status,
         data.errors || []
       );
-    }
-
     return data;
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    }
-
-    // Network or other errors
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
     throw new ApiError("Network error. Please check your connection.", 0);
   }
 };
 
-// API functions - FIXED STRUCTURE
 export const api = {
-  // Waitlist endpoints
   waitlist: {
     getAll: () => apiCall("/waitlist"),
     create: (data) =>
-      apiCall("/waitlist", {
-        method: "POST",
-        body: JSON.stringify(data),
-      }),
+      apiCall("/waitlist", { method: "POST", body: JSON.stringify(data) }),
     sendEmail: (email) =>
       apiCall(`/send-email?email=${encodeURIComponent(email)}`, {
         method: "GET",
       }),
   },
-
-  // Support endpoints - MOVED OUT OF WAITLIST
   support: {
     create: (data) =>
-      apiCall("/support", {
-        method: "POST",
-        body: JSON.stringify(data),
-      }),
+      apiCall("/support", { method: "POST", body: JSON.stringify(data) }),
   },
-
-  // Investor endpoints
   investors: {
     getAll: () => apiCall("/investors"),
     create: (data) =>
-      apiCall("/investors", {
-        method: "POST",
-        body: JSON.stringify(data),
-      }),
+      apiCall("/investors", { method: "POST", body: JSON.stringify(data) }),
   },
-
-  // Health check
   health: () => apiCall("/health"),
 };
 
